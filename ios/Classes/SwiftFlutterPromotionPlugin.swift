@@ -9,22 +9,26 @@ public class SwiftFlutterPromotionPlugin: NSObject, FlutterPlugin {
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        switch call.method {
-        case "set_promotion":
-            if let myArgs = call.arguments as? [String: Any],
-               let prefer = myArgs["prefer"] as? Float,
-               let max = myArgs["max"] as? Float{
-                
-                if #available(iOS 15.0, *) {
-                    let displayLink = CADisplayLink(target: self, selector: #selector(step))
-                    displayLink.preferredFrameRateRange = CAFrameRateRange(minimum:60, maximum:max, preferred:prefer)
-                    displayLink.add(to: .current, forMode: .default)
+        do {
+            switch call.method {
+            case "set_promotion":
+                if let myArgs = call.arguments as? [String: Any],
+                   let prefer = myArgs["prefer"] as? Float,
+                   let max = myArgs["max"] as? Float{
+                    
+                    if #available(iOS 15.0, *) {
+                        let displayLink = CADisplayLink(target: self, selector: #selector(step))
+                        displayLink.preferredFrameRateRange = CAFrameRateRange(minimum:60, maximum:max, preferred:prefer)
+                        displayLink.add(to: .current, forMode: .default)
+                    }
+                    result(true)
+                }else{
+                    result(false)
                 }
-                result(true)
-            }else{
+            default:
                 result(false)
             }
-        default:
+        }catch{
             result(false)
         }
     }

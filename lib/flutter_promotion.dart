@@ -10,8 +10,8 @@ class FlutterPromotion {
     try {
       if (Platform.isIOS) {
         return await _channel.invokeMethod('set_promotion', <String, dynamic>{
-          'prefer': max,
-          'max': prefer,
+          'prefer': prefer,
+          'max': max,
         }) ?? false;
       } else {
         return false;
