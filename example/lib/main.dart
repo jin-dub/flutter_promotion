@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -30,8 +32,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion =
-          await FlutterPromotion.platformVersion ?? 'Unknown platform version';
+      platformVersion = await FlutterPromotion.platformVersion ?? 'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -46,15 +47,42 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  static const String lorem = '''
+  Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+  ''';
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            debugPrint('${await FlutterPromotion().setPromotion()}');
+          },
+        ),
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: CustomScrollView(
+          slivers: [
+            SliverList(
+                delegate: SliverChildListDelegate(
+              List.generate(
+                  100,
+                  (index) => GestureDetector(
+                    onTap: ()async{
+                      debugPrint('${await FlutterPromotion().setPromotion(prefer: 120,max: 120)}');
+                    },
+                    child: Container(
+                          child: AspectRatio(
+                            aspectRatio: 1/1,
+                            child: Image.network(
+                                'https://www.gstatic.com/mobilesdk/160503_mobilesdk/logo/2x/firebase_28dp.png',fit: BoxFit.cover,),
+                          ),
+                        ),
+                  )),
+            ))
+          ],
         ),
       ),
     );
